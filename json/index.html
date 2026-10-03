@@ -5,23 +5,168 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>JSON-tehtävä</title>
+    <title>JSON-datan käsittelyä</title>
 
+    <!-- Bootstrapin CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet">
+
+    <!-- Sivuston omat tyylit -->
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #c45b87;
+        }
+
+        .card {
+            border-color: #f3b6cc;
+        }
+
+        img {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- Navigaatio -->
+    <nav class="navbar navbar-expand-lg" style="background-color: #f8c8dc;">
+        <div class="container">
+
+            <a class="navbar-brand" href="../index.html">
+                Katrin kissasivut
+            </a>
+
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="../index.html">
+                    Etusivulle
+                </a>
+            </div>
+
+        </div>
+    </nav>
+
+
+    <!-- Sivun pääsisältö -->
     <main class="container py-5">
 
-        <h1>JSON-tehtävä</h1>
-
         <div id="vastaus">
-            <p>Ladataan tietoja...</p>
+            <p>Ladataan JSON-tietoja...</p>
         </div>
 
     </main>
+
+
+    <script>
+
+        /*
+         * Haetaan JSON-tietue palvelimelta.
+         * Tietue sijaitsee samassa kansiossa kuin tämä HTML-tiedosto.
+         */
+        fetch('tietue.json')
+
+            // Muunnetaan palvelimelta saatu vastaus JSON-olioksi.
+            .then(function (response) {
+                return response.json();
+            })
+
+            // Kutsutaan kerro-funktiota ja annetaan sille JSON-olio.
+            .then(function (responseJson) {
+                kerro(responseJson);
+            })
+
+            // Jos hakemisessa tapahtuu virhe, näytetään virheilmoitus.
+            .catch(function (error) {
+                document.getElementById("vastaus").innerHTML =
+                    "<p>Tietoa ei pystytä hakemaan.</p>";
+
+                console.error(error);
+            });
+
+
+        /*
+         * Funktio käsittelee JSON-tietueen tiedot
+         * ja kirjoittaa ne HTML-sivulle.
+         */
+        function kerro(obj) {
+
+            // Aloitetaan otsikosta ja kuvauksesta.
+            let tiedot =
+                "<h1>" + obj.otsikko + "</h1>" +
+                "<p>" + obj.kuvaus + "</p>" +
+                "<hr>";
+
+
+            // Lisätään kuva JSON-tietueesta.
+            tiedot +=
+                "<p>" +
+                "<img src='" + obj.kuva + "' alt='Digitekniikat'>" +
+                "</p>";
+
+
+            // Lisätään opintojakson tiedot.
+            tiedot +=
+                "<h3>Opintojakso</h3>" +
+                "Nimi: " + obj.opintojakso.nimi + "<br>" +
+                "Tunnus: " + obj.opintojakso.tunnus + "<br>" +
+                "Opintopisteet: " + obj.opintojakso.opintopisteet +
+                "<br>";
+
+
+            // Lisätään sisällön otsikko.
+            tiedot += "<h3>Sisältö</h3>";
+
+            // Käydään sisalto-taulukko läpi for-silmukalla.
+            tiedot += "<ul>";
+
+            for (var i = 0; i < obj.sisalto.length; i++) {
+
+                tiedot +=
+                    "<li>" +
+                    obj.sisalto[i] +
+                    "</li>";
+            }
+
+            tiedot += "</ul>";
+
+
+            // Lisätään tekniikat-osion otsikko.
+            tiedot += "<h3>Tekniikat</h3>";
+
+            // Käydään tekniikat-taulukon alkiot läpi.
+            for (var i = 0; i < obj.tekniikat.length; i++) {
+
+                // Haetaan aihe JSON-tietueesta.
+                tiedot +=
+                    "<b>Aihe: " +
+                    obj.tekniikat[i].aihe +
+                    "</b><br>";
+
+                // Haetaan linkki ja tehdään siitä klikattava linkki.
+                tiedot +=
+                    "<a href='" +
+                    obj.tekniikat[i].linkki +
+                    "' target='_blank'>" +
+                    obj.tekniikat[i].linkki +
+                    "</a>";
+
+                tiedot += "<br><br>";
+            }
+
+
+            // Lopuksi kirjoitetaan muodostettu sisältö sivulle.
+            document.getElementById("vastaus").innerHTML = tiedot;
+        }
+
+    </script>
 
 </body>
 

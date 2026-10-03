@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Helsingin sää</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #ffffff;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #c45b87;
+        }
+
+        .navbar {
+            background-color: #f8c8dc;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #5a2942;
+        }
+
+        .btn-primary {
+            background-color: #e88bb3;
+            border-color: #e88bb3;
+        }
+
+        .saa-box {
+            max-width: 600px;
+            margin: auto;
+            text-align: center;
+        }
+
+        .saa-kuva {
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+
+            <a class="navbar-brand" href="../index.html">
+                Katrin kissasivut
+            </a>
+
+            <div class="navbar-nav ms-auto">
+
+                <a class="nav-link" href="../index.html">
+                    Etusivulle
+                </a>
+
+                <a class="nav-link" href="index.html">
+                    JSON-tehtävä
+                </a>
+
+                <a class="nav-link" href="poke.html">
+                    Pokemon haku
+                </a>
+
+                <a class="nav-link" href="saa.html">
+                    Helsingin sää
+                </a>
+
+            </div>
+        </div>
+    </nav>
+
+
+    <main class="container py-5">
+
+        <div class="saa-box">
+
+            <h1>Helsingin sää</h1>
+
+            <div id="saa">
+                Haetaan säätietoja...
+            </div>
+
+            <div id="aika"></div>
+
+        </div>
+
+    </main>
+
+
+    <script>
+
+        const url =
+            "https://api.openweathermap.org/data/2.5/weather?id=658225&appid=665ecd56dfc08dbb50feb8b8f5034e28&lang=fi&units=metric";
+
+
+        fetch(url)
+
+            .then(function(response) {
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                let saa = data.weather[0].description;
+
+                let lampotila = data.main.temp;
+
+                let tuuli = data.wind.speed;
+
+                let kuva = data.weather[0].icon;
+
+                document.getElementById("saa").innerHTML =
+                    "<h2>" + saa + "</h2>" +
+                    "<p>Lämpötila: " + lampotila + " °C</p>" +
+                    "<p>Tuuli: " + tuuli + " m/s</p>" +
+                    "<img class='saa-kuva' src='https://openweathermap.org/img/wn/" + kuva + "@2x.png' alt='" + saa + "'>";
+
+            });
+
+
+        let nyt = new Date();
+
+        document.getElementById("aika").innerHTML =
+            "<p>Sivu ladattu: " + nyt.toLocaleString("fi-FI") + "</p>";
+
+    </script>
+
+</body>
+
+</html>

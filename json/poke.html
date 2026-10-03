@@ -166,27 +166,60 @@
         }
 
 
-        function pokekuva(obj) {
+      function pokekuva(obj) {
 
-            let pokeurl = obj.sprites.front_default;
+    let pokeurl = obj.sprites.front_default;
+
+    document.getElementById("kuva2").innerHTML =
+        "<img src='" + pokeurl + "' alt='" + name + "'>";
+
+    document.getElementById("nimi").innerHTML =
+        "<h2>" + name + "</h2>";
+
+    document.getElementById("kaanto").innerHTML =
+        "<button onclick='kaanna()' class='btn btn-primary'>Käännä</button>";
+
+    document.getElementById("ominaisuudet").innerHTML = "";
+
+    document.getElementById("pokemonName").value = "";
+}
+
+
+function kaanna() {
+
+    const pokeName = name.toLowerCase();
+
+    fetch("https://pokeapi.co/api/v2/pokemon/" + pokeName)
+
+        .then(function(response) {
+
+            return response.json();
+
+        })
+
+        .then(function(obj) {
+
+            let pokeurl = obj.sprites.back_default;
 
             document.getElementById("kuva2").innerHTML =
                 "<img src='" + pokeurl + "' alt='" + name + "'>";
 
-            document.getElementById("nimi").innerHTML =
-                "<h2>" + name + "</h2>";
+            document.getElementById("ominaisuudet").innerHTML =
+                "<h3>Pokemonin ominaisuudet</h3>" +
+                "<p><b>Korkeus:</b> " + obj.height + "</p>" +
+                "<p><b>Paino:</b> " + obj.weight + "</p>" +
+                "<p><b>Perus kokemuspisteet:</b> " + obj.base_experience + "</p>";
 
-            document.getElementById("kaanto").innerHTML =
-                "<button onclick='kaanna()' class='btn btn-primary'>Käännä</button>";
+        })
 
-            document.getElementById("pokemonName").value = "";
+        .catch(function(error) {
 
-        }
+            document.getElementById("ominaisuudet").innerHTML =
+                "<p>Pokemonin tietoja ei pystytä hakemaan.</p>";
 
+        });
 
-        function kaanna() {
-
-        }
+}
 
     </script>
 

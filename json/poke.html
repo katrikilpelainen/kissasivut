@@ -7,6 +7,7 @@
 
     <title>Pokemon haku</title>
 
+    <!-- Bootstrap-tyylit -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet">
 
@@ -54,6 +55,7 @@
 
 <body>
 
+    <!-- Sivuston navigaatio -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
 
@@ -74,15 +76,17 @@
                 <a class="nav-link" href="poke.html">
                     Pokemon haku
                 </a>
+
                 <a class="nav-link" href="saa.html">
-    Helsingin sää
-</a>
+                    Helsingin sää
+                </a>
 
             </div>
         </div>
     </nav>
 
 
+    <!-- Pokemon-haun sisältö -->
     <main class="container py-5">
 
         <div class="pokemon-box">
@@ -117,17 +121,23 @@
 
     <script>
 
+        // Tallennetaan haetun Pokemonin nimi.
         let name = "";
 
 
+        // Haetaan Pokemon PokeAPI-palvelusta.
         function poke() {
 
+            // Haetaan hakukentän arvo ja muutetaan se pieniksi kirjaimiksi.
             const pokeName =
                 document.getElementById("pokemonName").value.toLowerCase();
 
+            // Tallennetaan käyttäjän kirjoittama nimi.
             name =
                 document.getElementById("pokemonName").value;
 
+
+            // Tarkistetaan, että käyttäjä on kirjoittanut Pokemonin nimen.
             if (pokeName === "") {
 
                 document.getElementById("nimi").innerHTML =
@@ -136,25 +146,31 @@
                 return;
             }
 
+
+            // Haetaan Pokemonin tiedot PokeAPI-rajapinnasta.
             fetch("https://pokeapi.co/api/v2/pokemon/" + pokeName)
 
-                .then(function(response) {
+                // Tarkistetaan palvelimelta saatu vastaus.
+                .then(function (response) {
 
                     if (!response.ok) {
                         throw new Error("Pokemonia ei löytynyt");
                     }
 
+                    // Muutetaan vastaus JSON-olioksi.
                     return response.json();
 
                 })
 
-                .then(function(responseJson) {
+                // Lähetetään JSON-olio pokekuva-funktiolle.
+                .then(function (responseJson) {
 
                     pokekuva(responseJson);
 
                 })
 
-                .catch(function(error) {
+                // Näytetään virheilmoitus, jos Pokemonia ei löydy.
+                .catch(function (error) {
 
                     document.getElementById("nimi").innerHTML =
                         "Pokemonia ei löytynyt.";
@@ -170,8 +186,10 @@
         }
 
 
+        // Näytetään haetun Pokemonin kuva ja nimi.
         function pokekuva(obj) {
 
+            // Haetaan Pokemonin etupuolen kuvan osoite.
             let pokeurl = obj.sprites.front_default;
 
             document.getElementById("kuva2").innerHTML =
@@ -180,39 +198,49 @@
             document.getElementById("nimi").innerHTML =
                 "<h2>" + name + "</h2>";
 
+            // Luodaan Käännä-painike.
             document.getElementById("kaanto").innerHTML =
                 "<button onclick='kaanna()' class='btn btn-primary'>Käännä</button>";
 
+            // Tyhjennetään ominaisuudet uuden haun yhteydessä.
             document.getElementById("ominaisuudet").innerHTML = "";
 
+            // Tyhjennetään hakukenttä.
             document.getElementById("pokemonName").value = "";
 
         }
 
 
+        // Haetaan Pokemon uudelleen ja näytetään sen takapuolen kuva.
         function kaanna() {
 
             const pokeName = name.toLowerCase();
 
             fetch("https://pokeapi.co/api/v2/pokemon/" + pokeName)
 
-                .then(function(response) {
+                // Muutetaan vastaus JSON-olioksi.
+                .then(function (response) {
 
                     return response.json();
 
                 })
 
-                .then(function(obj) {
+                // Käsitellään Pokemonin tiedot.
+                .then(function (obj) {
 
+                    // Haetaan Pokemonin takapuolen kuva.
                     let pokeurl = obj.sprites.back_default;
 
+                    // Käytetään vaihtoehtoista kuvaa, jos takakuvaa ei löydy.
                     if (!pokeurl) {
                         pokeurl = obj.sprites.back_shiny;
                     }
 
+                    // Vaihdetaan etupuolen kuva takapuolen kuvaan.
                     document.getElementById("kuva2").innerHTML =
                         "<img src='" + pokeurl + "' alt='" + name + "'>";
 
+                    // Näytetään kolme Pokemonin ominaisuutta.
                     document.getElementById("ominaisuudet").innerHTML =
                         "<h3>Pokemonin ominaisuudet</h3>" +
                         "<p><b>Korkeus:</b> " + obj.height + "</p>" +
@@ -221,7 +249,8 @@
 
                 })
 
-                .catch(function(error) {
+                // Näytetään virheilmoitus, jos tietoja ei saada haettua.
+                .catch(function (error) {
 
                     document.getElementById("ominaisuudet").innerHTML =
                         "<p>Pokemonin tietoja ei pystytä hakemaan.</p>";
